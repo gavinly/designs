@@ -3,189 +3,300 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Armada — Private Payments Feature Ideas</title>
+  <title>Armada — Private Payments Architecture</title>
   <style>
     :root{
-      --bg:#0b0d10;
+      --bg:#0a0c0f;
       --panel:#11151a;
-      --panel-2:#151a20;
+      --panel2:#151a21;
+      --panel3:#0f1318;
       --text:#f3f4f6;
       --muted:#9aa3af;
-      --line:#242a33;
-      --accent:#7c9cff;
-      --accent-soft:#182038;
-      --trade:#f3c978;
-      --trade-bg:#211b10;
-      --good:#99e6bf;
-      --shadow:rgba(0,0,0,.28);
+      --line:#252b34;
+      --accent:#7d9cff;
+      --accent-soft:#182139;
+      --green:#9be7c0;
+      --green-soft:#10231b;
+      --amber:#f0ca7c;
+      --amber-soft:#211b10;
+      --shadow:rgba(0,0,0,.30);
+      --code:#c8d4ff;
     }
     *{box-sizing:border-box}
     html{color-scheme:dark}
     body{
       margin:0;
-      font-family:Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(124,156,255,.08), transparent 34%),
+        radial-gradient(circle at top left, rgba(125,156,255,.09), transparent 32%),
         var(--bg);
       color:var(--text);
-      line-height:1.58;
+      font-family:Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height:1.6;
     }
     .wrap{
-      max-width:940px;
+      max-width:980px;
       margin:0 auto;
-      padding:58px 22px 76px;
+      padding:58px 22px 78px;
     }
     .eyebrow{
+      color:var(--accent);
       font-size:13px;
       font-weight:800;
       letter-spacing:.1em;
       text-transform:uppercase;
-      color:var(--accent);
       margin-bottom:10px;
     }
     h1{
-      font-size:42px;
-      line-height:1.08;
-      letter-spacing:-.035em;
-      margin:0 0 14px;
+      margin:0;
+      font-size:44px;
+      line-height:1.05;
+      letter-spacing:-.04em;
     }
-    .intro{
+    .dek{
+      margin:15px 0 36px;
       color:var(--muted);
-      font-size:17px;
       max-width:760px;
-      margin-bottom:36px;
+      font-size:17px;
     }
-    .card{
-      background:linear-gradient(180deg, var(--panel-2), var(--panel));
+    h2{
+      font-size:28px;
+      line-height:1.2;
+      letter-spacing:-.025em;
+      margin:44px 0 14px;
+    }
+    h3{
+      font-size:22px;
+      line-height:1.25;
+      margin:0 0 8px;
+      letter-spacing:-.015em;
+    }
+    p{margin:10px 0}
+    strong{color:#fff}
+    .context{
+      background:linear-gradient(180deg, var(--panel2), var(--panel));
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:28px;
+      box-shadow:0 12px 30px var(--shadow);
+    }
+    .quote{
+      border-left:3px solid var(--accent);
+      padding:2px 0 2px 18px;
+      margin:18px 0;
+      color:#dce2ef;
+      font-size:17px;
+    }
+    .flow{
+      display:block;
+      margin:14px 0;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:#0d1116;
+      color:var(--code);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+      font-size:14px;
+      overflow:auto;
+      white-space:nowrap;
+    }
+    .core-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+      margin-top:18px;
+    }
+    .core{
+      background:linear-gradient(180deg, var(--panel2), var(--panel));
       border:1px solid var(--line);
       border-radius:18px;
-      padding:25px 27px;
-      margin:16px 0;
-      box-shadow:0 10px 28px var(--shadow);
+      padding:24px 26px;
+      box-shadow:0 10px 26px var(--shadow);
     }
-    .top{
+    .core-head{
       display:flex;
-      align-items:flex-start;
       gap:14px;
+      align-items:flex-start;
       margin-bottom:10px;
     }
     .num{
-      width:36px;
-      height:36px;
-      border-radius:11px;
-      background:var(--accent-soft);
-      color:var(--accent);
-      font-weight:800;
+      width:36px;height:36px;
+      flex:none;
       display:flex;
       align-items:center;
       justify-content:center;
-      flex:none;
-      border:1px solid rgba(124,156,255,.16);
+      border-radius:11px;
+      color:var(--accent);
+      background:var(--accent-soft);
+      border:1px solid rgba(125,156,255,.18);
+      font-weight:800;
     }
-    h2{
-      margin:3px 0 0;
-      font-size:23px;
-      line-height:1.25;
-      letter-spacing:-.015em;
+    .tag{
+      display:inline-block;
+      margin-top:3px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      color:var(--green);
     }
-    p{
-      margin:10px 0;
-      font-size:16px;
-    }
-    .technical{
-      color:#d4d8de;
-    }
-    .label{
-      font-weight:750;
-      color:#fff;
-    }
-    .tradeoffs{
-      margin-top:15px;
+    .tech{color:#d3d8df}
+    .trade{
+      margin-top:14px;
       padding:12px 14px;
       border-radius:12px;
-      background:var(--trade-bg);
-      border:1px solid rgba(243,201,120,.14);
-      color:var(--trade);
+      border:1px solid rgba(240,202,124,.15);
+      background:var(--amber-soft);
+      color:var(--amber);
       font-size:14px;
     }
-    .note{
-      margin-top:34px;
-      padding:18px 20px;
-      background:#0f1318;
+    .feature{
+      background:var(--panel3);
       border:1px solid var(--line);
-      border-radius:14px;
+      border-radius:16px;
+      padding:22px 24px;
+      margin:14px 0;
+    }
+    .summary{
+      margin-top:22px;
+      padding:20px 22px;
+      border-radius:16px;
+      background:var(--green-soft);
+      border:1px solid rgba(155,231,192,.14);
+      color:#d9f6e7;
+    }
+    .small{
       color:var(--muted);
       font-size:14px;
     }
-    .note strong{color:var(--good)}
-    @media (max-width:640px){
+    @media (max-width:650px){
       .wrap{padding:38px 16px 54px}
-      h1{font-size:33px}
-      .card{padding:20px}
+      h1{font-size:34px}
+      h2{font-size:25px}
+      .context,.core{padding:21px}
     }
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <div class="eyebrow">Armada</div>
-    <h1>Private payments feature ideas</h1>
-    <div class="intro">
-      A pressure-tested priority list of payment primitives that could make Armada more useful for recurring organizational flows,
-      onboarding, and private business relationships.
-    </div>
+<main class="wrap">
+  <div class="eyebrow">Armada</div>
+  <h1>Private payments architecture</h1>
+  <div class="dek">
+    How an ordinary Ethereum identity becomes privately payable without making privacy infrastructure the user's first problem.
+  </div>
 
-    <section class="card">
-      <div class="top"><div class="num">1</div><h2>Standing Receiving Authorizations</h2></div>
-      <p>Bob signs once to say, in effect, “you can keep paying me privately using this Armada receiving material.” That removes the need for a fresh acceptance every payroll cycle, contractor payment, grant installment, or other recurring business payment.</p>
-      <p class="technical"><span class="label">Technically:</span> Bob signs a reusable authorization binding the payer or integrator, receiving material, asset, chain, validity window, and optional policy limits. Future payments are ordinary private transfers, with any amount/frequency limits enforced by the payer or integrator unless Armada later adds cryptographic enforcement.</p>
-      <div class="tradeoffs"><strong>Key trade-offs:</strong> The authorization does not itself force the payer to pay or cryptographically enforce business limits. Revocation, key rotation, and expiry need very clear semantics.</div>
+  <section class="context">
+    <h2 style="margin-top:0">The problem we were trying to solve</h2>
+    <p><strong>How can someone already inside Armada pay a normal Ethereum address privately, without forcing the recipient to understand or adopt Armada before the payment workflow starts?</strong></p>
+
+    <p>The original intuition was that the <strong>payment itself should drive onboarding</strong>. Alice should be able to think “pay Bob,” not “first convince Bob to create a shielded identity, then ask him for a special address, then send.”</p>
+
+    <div class="flow">Alice sends first → Bob has done nothing → Bob later connects → the payment appears</div>
+
+    <p>The cleanest version of that turned out not to work. Armada’s shielded identity is not derivable from Bob’s <code>0x</code> address or even from Bob’s Ethereum public key. Armada derives its shielded keys from Bob’s enrollment signature bytes, so Alice cannot know in advance what Bob’s eventual Armada receiving key will be.</p>
+
+    <p>That led to two different payment designs rather than one universal “send privately to any address” primitive.</p>
+  </section>
+
+  <h2>The core architecture</h2>
+
+  <div class="core-grid">
+    <section class="core">
+      <div class="core-head">
+        <div class="num">1</div>
+        <div>
+          <h3>Pay Privately</h3>
+          <div class="tag">Shielded Payment Intent</div>
+        </div>
+      </div>
+      <p>This is the serious-payment path. Alice proposes a payment, Bob connects and enrolls if necessary, and Bob supplies authenticated Armada receiving material before any money moves.</p>
+      <div class="flow">Alice proposes → Bob accepts/enrolls → Bob supplies authenticated receiving material → Alice settles privately</div>
+      <p class="tech"><strong>Why this exists:</strong> nothing gets stranded if Bob never responds, dead or mistyped addresses do not lose funds, and after settlement Bob owns a normal Armada note with no sender clawback.</p>
+      <p class="tech"><strong>Best fit:</strong> payroll, vendors, grants, invoices, treasury payments, and any workflow where acknowledgement and destination verification matter.</p>
+      <div class="trade"><strong>Trade-off:</strong> Bob must participate before the first payment settles. The design deliberately chooses stronger payment semantics over “send first” magic.</div>
     </section>
 
-    <section class="card">
-      <div class="top"><div class="num">2</div><h2>Private Invoices / Payment Requests</h2></div>
-      <p>Bob sends Alice an invoice or payment request that already contains everything needed to pay him privately. It makes Armada fit naturally into vendor, contractor, grant, and B2B workflows instead of requiring a separate “privacy onboarding” ceremony.</p>
-      <p class="technical"><span class="label">Technically:</span> Bob signs a request containing the amount, asset, memo or invoice reference, expiry, and authenticated shielded receiving material. Alice verifies it and settles with a standard Armada private transfer.</p>
-      <div class="tradeoffs"><strong>Key trade-offs:</strong> Requires off-chain delivery; invoice metadata can leak through the transport; replay, expiry, cancellation, and idempotency rules must be explicit.</div>
+    <section class="core">
+      <div class="core-head">
+        <div class="num">2</div>
+        <div>
+          <h3>Send a Private Claim</h3>
+          <div class="tag">Claimable Private Payment</div>
+        </div>
+      </div>
+      <p>This is the asynchronous onboarding path. Alice can fund a claim before Bob has enrolled, and Bob later connects and sweeps the value into his real Armada balance.</p>
+      <div class="flow">Alice funds claim → Bob does nothing yet → Bob later connects → claim moves into Bob’s real private balance</div>
+      <p class="tech"><strong>Why this exists:</strong> it preserves the original “the payment itself onboards the recipient” experience and works even when Bob has never used Armada before.</p>
+      <p class="tech"><strong>Best fit:</strong> onboarding, gifts, casual payments, low-friction grants, and other “send now, onboard later” experiences.</p>
+      <div class="trade"><strong>Trade-off:</strong> before claim, the sender generally still controls the ephemeral key and can revoke; a leaked claim can potentially be stolen; wrong-address semantics are weaker than the intent path.</div>
     </section>
 
-    <section class="card">
-      <div class="top"><div class="num">3</div><h2>Commercial Settlement Records</h2></div>
-      <p>A private transfer can be final on-chain without necessarily meaning the underlying invoice, payroll obligation, or other business obligation is legally or operationally complete. Armada can give applications a signed record that ties a private payment to the specific obligation it was meant to satisfy and records which event the parties treat as completion.</p>
-      <p class="technical"><span class="label">Technically:</span> The payment workflow binds a business object such as an invoice ID, payroll item, or grant milestone to the settlement. The recipient or integrator can then sign a record referencing the payment and the agreed completion state — for example confirmed on-chain, note detected, received, or reconciled.</p>
-      <div class="tradeoffs"><strong>Key trade-offs:</strong> Armada should provide evidence, not declare when a legal debt is extinguished. The meaning of “settled” belongs to the parties, contract, integrator, and jurisdiction.</div>
+    <section class="core">
+      <div class="core-head">
+        <div class="num">3</div>
+        <div>
+          <h3>Known Recipient</h3>
+          <div class="tag">Repeat relationship</div>
+        </div>
+      </div>
+      <p>The first successful interaction should create an authenticated private-pay relationship. Once Alice has verified Bob’s Armada receiving material, future payments can usually skip the onboarding or acceptance round-trip and become ordinary immediate private transfers.</p>
+      <div class="flow">first serious payment → authenticated receiving relationship → future payments become immediate</div>
+      <p class="tech"><strong>Why this matters:</strong> the friction is concentrated in the first payment rather than repeated forever. This is what makes the architecture fit recurring organizational payments.</p>
+      <p class="tech"><strong>Implementation:</strong> retain authenticated receiving material plus provenance and rotation/expiry metadata. A more formal standing authorization can later add payer, asset, validity, or policy bounds.</p>
+      <div class="trade"><strong>Trade-off:</strong> key rotation, stale contact data, and compromised local contact stores need careful handling.</div>
     </section>
+  </div>
 
-    <section class="card">
-      <div class="top"><div class="num">4</div><h2>Per-Counterparty Receiving Capabilities</h2></div>
-      <p>Instead of Bob giving everyone the same reusable receiving identity, he gives different payers or platforms their own private receiving capability. That makes the relationship itself the privacy boundary and reduces cross-context correlation.</p>
-      <p class="technical"><span class="label">Technically:</span> Armada derives or registers a scoped receiving subkey for a specific payer or integrator context, then uses ordinary shielded transfers to that scoped public material.</p>
-      <div class="tradeoffs"><strong>Key trade-offs:</strong> This is only attractive if multiple receiving identities fit the existing spend model without circuit changes. Otherwise the privacy benefit may not justify the key-management and recovery complexity.</div>
-    </section>
+  <div class="summary">
+    <strong>The product story:</strong> Armada lets you pay someone privately even if they are not already an Armada user. For serious payments, the recipient accepts before settlement. For low-friction onboarding, the sender can create a private claim first. Once the relationship exists, future payments can be immediate.
+  </div>
 
-    <section class="card">
-      <div class="top"><div class="num">5</div><h2>Private Forwarding / Recipient Routing</h2></div>
-      <p>Bob receives privately, then automatically routes the money somewhere else without Alice learning the ultimate destination. This is useful when Armada sits underneath payroll, treasury, or other apps and the recipient wants control over what happens after receipt.</p>
-      <p class="technical"><span class="label">Technically:</span> Bob’s app or integrator receives the shielded note first, then performs a second private spend or unshield according to a recipient-defined routing rule.</p>
-      <div class="tradeoffs"><strong>Key trade-offs:</strong> Immediate exits can still leak through timing and amount correlation. Automation also introduces delegation and custody questions, and the sender must never control the final destination.</div>
-    </section>
+  <h2>Features that build on the core</h2>
 
-    <section class="card">
-      <div class="top"><div class="num">6</div><h2>Claimable Private Payments</h2></div>
-      <p>Alice can send before Bob has enrolled, and Bob later connects his wallet and pulls the value into his real Armada balance. This is the most compelling onboarding primitive for gifts, casual payments, grants, and “send first, onboard later” experiences.</p>
-      <p class="technical"><span class="label">Technically:</span> Alice funds an ephemeral shielded note and gives Bob a claim envelope through a link, QR code, or message. When Bob claims, the note is privately transferred into his canonical Armada wallet before he spends or exits.</p>
-      <div class="tradeoffs"><strong>Key trade-offs:</strong> The sender generally retains the ability to revoke before claim because they created the ephemeral key. Bearer links can be stolen if leaked, and dormant-recipient semantics are weaker than intent-based payments.</div>
-    </section>
+  <section class="feature">
+    <h3>Private Invoices / Payment Requests</h3>
+    <p>Bob sends Alice a signed payment request containing the business context and authenticated private receiving material. It turns the intent path into something that feels like a normal invoice rather than a privacy-specific workflow.</p>
+    <p class="tech"><strong>Technically:</strong> bind amount, asset, invoice or memo reference, expiry, and receiving material; Alice verifies and settles using Pay Privately.</p>
+    <div class="trade"><strong>Trade-offs:</strong> off-chain delivery can leak metadata; replay, cancellation, expiry, and idempotency need explicit rules.</div>
+  </section>
 
-    <section class="card">
-      <div class="top"><div class="num">7</div><h2>Private Proof of Receipt</h2></div>
-      <p>Bob can prove that he received and controls a payment without revealing his note, his viewing key, or where the money later went. That could support invoice disputes, payroll attestations, or compliance without giving the sender a permanent monitoring handle.</p>
-      <p class="technical"><span class="label">Technically:</span> A future ZK receipt proves control of one of the outputs created by a settlement transaction, without disclosing which commitment is Bob’s.</p>
-      <div class="tradeoffs"><strong>Key trade-offs:</strong> Likely requires new proof or circuit work, and the semantics of “receipt” need to be defined precisely. This looks like a later-stage feature, not a v1 priority.</div>
-    </section>
+  <section class="feature">
+    <h3>Standing Receiving Authorizations</h3>
+    <p>Bob can explicitly authorize an ongoing payer or platform to keep paying him using the same authenticated private receiving relationship. This formalizes the Known Recipient state for payroll, contractors, grants, and other recurring flows.</p>
+    <p class="tech"><strong>Technically:</strong> a signed authorization can bind payer or integrator, receiving material, asset, chain, expiry, and optional policy limits.</p>
+    <div class="trade"><strong>Trade-offs:</strong> unless later enforced cryptographically, amount and frequency limits are payer/integrator policy rather than protocol guarantees.</div>
+  </section>
 
-    <div class="note">
-      <strong>Pressure-test changes:</strong> “Reusable Receiving Profiles” was folded into Standing Receiving Authorizations because it is more an implementation pattern than a separate product primitive. “Standing Payment Mandates” was renamed to avoid implying debit-style authority or protocol-enforced payment obligations. Commercial Settlement Records was added as a distinct business-layer primitive.
-    </div>
-  </main>
+  <section class="feature">
+    <h3>Commercial Settlement Records</h3>
+    <p>An on-chain private transfer can be final without necessarily meaning an invoice, payroll obligation, or legal debt is complete. Armada can give applications a signed record tying the private payment to the obligation it was meant to satisfy and recording what the parties treat as completion.</p>
+    <p class="tech"><strong>Technically:</strong> bind a business object such as an invoice ID, payroll item, or grant milestone to the payment, then allow a recipient or integrator to sign a state such as confirmed on-chain, received, reconciled, or commercially settled.</p>
+    <div class="trade"><strong>Trade-offs:</strong> Armada should provide evidence, not declare when a legal obligation is extinguished. That meaning belongs to the parties, contract, integrator, and jurisdiction.</div>
+  </section>
+
+  <section class="feature">
+    <h3>Per-Counterparty Receiving Capabilities</h3>
+    <p>Bob could give different payers or platforms distinct reusable private receiving identities, making each relationship its own privacy boundary and reducing cross-context correlation.</p>
+    <p class="tech"><strong>Technically:</strong> derive or register scoped receiving material for a payer or integrator context, then use ordinary shielded transfers.</p>
+    <div class="trade"><strong>Trade-offs:</strong> worthwhile only if the existing spend model supports multiple receiving identities cleanly; otherwise recovery and key-management complexity may outweigh the privacy benefit.</div>
+  </section>
+
+  <section class="feature">
+    <h3>Private Forwarding / Recipient Routing</h3>
+    <p>Bob can receive privately and then route funds somewhere else without Alice learning the final destination. This becomes useful when Armada is embedded beneath payroll, treasury, or other applications.</p>
+    <p class="tech"><strong>Technically:</strong> receive the shielded note first, then perform a second private spend or unshield under a recipient-defined routing policy.</p>
+    <div class="trade"><strong>Trade-offs:</strong> timing and amount correlation remain possible; automation introduces delegation and custody questions.</div>
+  </section>
+
+  <section class="feature">
+    <h3>Private Proof of Receipt</h3>
+    <p>Bob can prove that he received and controls a payment without revealing his note, viewing key, or where the money later went. This could support disputes, payroll attestations, or compliance without creating a permanent monitoring handle.</p>
+    <p class="tech"><strong>Technically:</strong> a future ZK receipt proves control of one of the outputs from a settlement without revealing which commitment is Bob’s.</p>
+    <div class="trade"><strong>Trade-offs:</strong> likely requires new proof or circuit work, and “receipt” needs very precise semantics. This is probably later-stage.</div>
+  </section>
+
+  <p class="small">
+    The architecture deliberately avoids pretending there is one perfect non-interactive private-payment primitive. The first-payment path depends on the semantics the sender and recipient actually need.
+  </p>
+</main>
 </body>
 </html>
