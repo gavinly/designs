@@ -1,5 +1,0 @@
-{
-  "name": "Armada Safe Verification",
-  "description": "Verify control of a Safe for an Armada revenue-locked ARM allocation. No transaction is created or sent.",
-  "iconPath": "armada-icon.svg"
-}
